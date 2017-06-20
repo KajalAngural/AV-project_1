@@ -1,31 +1,23 @@
-from steganography.steganography import Steganography
-from datetime import datetime,timedelta
-from spy_details import friends,Chat_message,Spy,spy
+from steganography.steganography import Steganography       #importing Steganography class from steganography library
+
+from spy_details import friends,Chat_message,Spy,spy        #importing from another file - spy_details
 
 
 
 
 
-
+#list of messages
 STATUS_MESSAGES = ["Be Happy!!!", "Never feel shy to try something new!!!","be confident!!!"]
 print "Let's get started!!!"
 
 
 
-
+#variable asking from the spy to conitnue by the default name or as a new one
 question = raw_input("Continue as %s [Y/N]" %(spy.name))
 
 
-def read_chat_history():
-    read_for = select_friend()
 
-    for chat in friends[read_for].chats:
-        if chat.sent_by_me:
-            print '[%s] %s: %s' % (chat.time.strftime("%d %B %Y"), 'You said:', chat.message)
-        else:
-            print '[%s] %s said: %s' % (chat.time.strftime("%d %B %Y"), friends[read_for].name, chat.message)
-
-
+#function for selecting a friend from the available friends and also return the position of selected friend
 def select_friend():
     item_number = 1
     for friend in friends:
@@ -35,26 +27,7 @@ def select_friend():
     friend_position = int(friend_choice)-1
     return friend_position
 
-
-def add_friend():
-    new_friend = Spy("","",0,0.0)
-
-    new_friend.name = raw_input("Whats the name of your friend?")
-    new_friend.salutation = raw_input("What should we call your friend: Mr. or Ms.?")
-    new_friend.name = "%s %s" %(new_friend.salutation,new_friend.name)
-    new_friend.age = raw_input("Whats the age of your friend?")
-    new_friend.age = int(new_friend.age)
-    new_friend.rating = raw_input("Whats the rating of your friend?")
-    new_friend.rating = float(new_friend.rating)
-
-    if len(new_friend.name) > 0 and new_friend.rating > 0 and new_friend.age > 18:
-        friends.append(new_friend)
-        print "Friend Added!!!"
-    else:
-        print("Sorry! We cant add friend with the provided information..!!")
-    return len(friends)
-
-
+#function to add status, spy can select a status from the previous status being displayed or he/she can add a new status
 def add_status(current_status):
     update_status =  None
 
@@ -67,7 +40,7 @@ def add_status(current_status):
 
 
 
-    if default.upper() == "N":
+    if default.upper() == "N":      #if spy wants to add new status
         new_status = raw_input("Whats your new status?")
         if len(new_status) > 0:
             STATUS_MESSAGES.append(new_status)
@@ -77,7 +50,7 @@ def add_status(current_status):
 
 
 
-    elif default.upper() == "Y":
+    elif default.upper() == "Y":        #if spy wants to select status from the previous ones
         item_position = 1
         for message in STATUS_MESSAGES:
             print "%d. %s" %(item_position, message)
@@ -94,6 +67,28 @@ def add_status(current_status):
     return(update_status)
 
 
+#function to add a friend. Spy adds details of his/her friend and then that friend is added in friends list.
+def add_friend():
+    new_friend = Spy("","",0,0.0)
+
+    new_friend.name = raw_input("Whats the name of your friend?")
+    new_friend.salutation = raw_input("What should we call your friend: Mr. or Ms.?")
+    new_friend.name = "%s %s" %(new_friend.salutation,new_friend.name)
+    new_friend.age = raw_input("Whats the age of your friend?")
+    new_friend.age = int(new_friend.age)
+    new_friend.rating = raw_input("Whats the rating of your friend?")
+    new_friend.rating = float(new_friend.rating)
+
+    if len(new_friend.name) > 0 and new_friend.rating > 0.0 and new_friend.age >12 and new_friend.age < 50:
+        friends.append(new_friend)
+        print "Friend Added!!!"
+    else:
+        print("Sorry! We cant add friend with the provided information..!!")
+    return len(friends)
+
+
+
+#function to send a message, a secret message is hidden inside an image
 def send_msg():
     friend_choice = select_friend()
     original_image = raw_input("Whats the name of file?")
@@ -108,7 +103,7 @@ def send_msg():
 
 
 
-
+#function to read a message
 def read_msg():
     sender = select_friend()
     output_path = raw_input("What is the name of the file?")
@@ -121,6 +116,21 @@ def read_msg():
 
     print "Your secret message is %s" %(secret_text)
 
+
+
+#function to read chat history of a friend. It will show date when the message has been send.
+def read_chat_history():
+    read_for = select_friend()
+
+    for chat in friends[read_for].chats:
+        if chat.sent_by_me:
+            print '[%s] %s: %s' % (chat.time.strftime("%d %B %Y"), 'You said:', chat.message)
+        else:
+            print '[%s] %s said: %s' % (chat.time.strftime("%d %B %Y"), friends[read_for].name, chat.message)
+
+
+
+#main function calling other functions. It will show a menu to the spy and he/she will select an option according to his/her requirements
 def start_chat(spy):
     current_status=None
     spy.name = spy.salutation +" "+spy.name
@@ -131,31 +141,32 @@ def start_chat(spy):
             menu_choices = "What you want to do :\n1.Update status\n2.Add a friend\n3.Send a message\n4.Read a message\n5.Read chat history\n6.Exit  "
             menu_choice = raw_input(menu_choices)
             menu_choice = int(menu_choice)
-            if menu_choice == 1:
+            if menu_choice == 1:        #spy wants to update status
                 current_status=add_status(current_status)
 
-            elif menu_choice == 2:
+            elif menu_choice == 2:      #spy wants to add a friend
                number_friends =  add_friend()
                print "Number of friends are %d" %(number_friends)
 
-
-
-            elif menu_choice == 3:
+            elif menu_choice == 3:      #spy wants to send a message
                 send_msg()
 
-            elif menu_choice == 4:
+            elif menu_choice == 4:      #spy wants to read a message
                 read_msg()
 
-            elif menu_choice == 5:
+            elif menu_choice == 5:      #spy wants to read chat history of a selected friend
                 read_chat_history()
 
 
-            else:
+            else:                       #spy wants to exit the application
                 print "Exiting the application"
                 show_menu = False
     else:
         print "Sorry!! You are not of the correct age.."
 
+
+
+#executable statements
 if question.upper() == "Y":
     start_chat(spy)
 else:
