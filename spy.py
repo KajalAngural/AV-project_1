@@ -17,6 +17,8 @@ question = raw_input("Continue as %s [Y/N]" %(spy.name))
 
 
 
+
+
 #function for selecting a friend from the available friends and also return the position of selected friend
 def select_friend():
     item_number = 1
@@ -72,18 +74,26 @@ def add_friend():
     new_friend = Spy("","",0,0.0)
 
     new_friend.name = raw_input("Whats the name of your friend?")
-    new_friend.salutation = raw_input("What should we call your friend: Mr. or Ms.?")
-    new_friend.name = "%s %s" %(new_friend.salutation,new_friend.name)
-    new_friend.age = raw_input("Whats the age of your friend?")
-    new_friend.age = int(new_friend.age)
-    new_friend.rating = raw_input("Whats the rating of your friend?")
-    new_friend.rating = float(new_friend.rating)
+    if len(new_friend.name) > 0 and new_friend.name.isspace() == False:
+        new_friend.salutation = raw_input("What should we call your friend: Mr. or Ms.?")
+        if new_friend.salutation == "Mr." or new_friend.salutation == "Ms.":
+            new_friend.name = new_friend.salutation+ " " +new_friend.name
+            new_friend.age = raw_input("Whats the age?")
+            new_friend.age = int(new_friend.age)
+            new_friend.rating = raw_input("Whats the rating?")
+            new_friend.rating = float(new_friend.rating)
+            if new_friend.age > 12 and new_friend.rating > 3.5:
+                friends.append(new_friend)
+                print "New friend added!!"
+            else:
+                print "Sorry! Can't add the friend with the information provided!!"
 
-    if len(new_friend.name) > 0 and new_friend.rating > 0.0 and new_friend.age >12 and new_friend.age < 50:
-        friends.append(new_friend)
-        print "Friend Added!!!"
+        else:
+            print "Enter Mr. or Ms."
+
     else:
-        print("Sorry! We cant add friend with the provided information..!!")
+        print "Enter valid name!!"
+
     return len(friends)
 
 
@@ -94,13 +104,16 @@ def send_msg():
     original_image = raw_input("Whats the name of file?")
     text = raw_input("What do you want to hide?")
     output_path = "images.jpg"
-    Steganography.encode(original_image,output_path,text)
+    if len(text) > 10:
+        print "You are blocked!!!"
 
-    new_chat = Chat_message(text, True)
-    friends[friend_choice].chats.append(new_chat)
+    else:
+        Steganography.encode(original_image, output_path, text)
 
-    print "Your secret message image is ready!"
+        new_chat = Chat_message(text, True)
+        friends[friend_choice].chats.append(new_chat)
 
+        print "Your secret message image is ready!"
 
 
 #function to read a message
