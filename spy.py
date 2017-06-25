@@ -104,8 +104,9 @@ def send_msg():
     original_image = raw_input("Whats the name of file?")
     text = raw_input("What do you want to hide?")
     output_path = "images.jpg"
-    if len(text) > 10:
-        print "You are blocked!!!"
+    list_of = text.split(" ")
+    if len(list_of) > 100:
+        print "You crossed the message limit!!!"
 
     else:
         Steganography.encode(original_image, output_path, text)
